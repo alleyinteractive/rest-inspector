@@ -1,0 +1,87 @@
+th#callbacks,
+th#methods {
+    width: 64px;
+}
+
+tr.route-row td {
+    vertical-align: middle;
+}
+
+tr.route-row.route-private {
+    opacity: 0.5;
+}
+
+td.column-methods {
+    text-align: left;
+    vertical-align: middle;
+}
+
+td.column-methods code {
+    display: inline-block;
+    margin-top: 3px;
+}
+
+td.column-callbacks {
+    text-align: center;
+    vertical-align: middle;
+}
+
+.rest-inspector-tooltip {
+    position: relative;
+    padding: 3px;
+    z-index: 50;
+}
+
+.rest-inspector-tooltip-popup {
+    position: absolute;
+    display: none;
+    right: 32px;
+    top: -5px;
+    width: auto;
+    padding: 6px;
+    background: #fff;
+    border: 1px solid #ccc;
+}
+
+div.arrow-right {
+    width: 0;
+    height: 0;
+    border-top: 33px solid transparent;
+    border-bottom: 33px solid transparent;
+
+    border-left: 33px solid #ccc;
+}
+
+.rest-inspector-tooltip-popup pre {
+    margin: 0px;
+}
+
+.rest-inspector-tooltip:hover > .rest-inspector-tooltip-popup {
+    display: block;
+}
+
+.rest-inspector-json-args {
+    overflow-x: scroll;
+}
+
+#rest-inspector-meta-box .rest-inspector-json-args {
+    margin: 0 8px;
+}
+
+#rest-inspector-meta-box .rest-inspector-json-args:before {
+    content: 'Get';
+    text-transform: uppercase;
+    display: inline;
+    background: #eee;
+    color: #999;
+    padding: 6px;
+    font-weight: 600;
+    font-size: 10px;
+    position: absolute;
+}
+
+#rest-inspector-meta-box .rest-inspector-json-args pre.renderjson {
+    display: inline-block;
+    vertical-align: top;
+    margin: 6px 6px 16px 38px;
+}
