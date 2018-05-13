@@ -232,8 +232,6 @@ class REST_Inspector {
 				$rest_base = ! empty( $wp_object->rest_base ) ? $wp_object->rest_base : $wp_object->name;
 		}
 
-		// TODO: Refine how we determine and handle custom controllers.
-		// TODO: Handle custom namespaces in addition to the core `wp/v2` routes.
 
 		/**
 		 * Filter default REST controller class.
