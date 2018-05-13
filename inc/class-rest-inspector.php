@@ -222,7 +222,6 @@ class REST_Inspector {
 				break;
 			case 'term' :
 				$object_id = REST_Inspector::$object_id;
-//				d(get_current_screen());
 				$wp_object = get_taxonomy( wp_unslash( sanitize_text_field( $_GET['taxonomy' ] ) ) );
 				$rest_base = ! empty( $wp_object->rest_base ) ? $wp_object->rest_base : $wp_object->name;
 				break;
@@ -260,8 +259,6 @@ class REST_Inspector {
 			'WP_REST_Attachments_Controller',
 			'WP_REST_Post_Types_Controller',
 		], $wp_object );
-
-//		d($rest_controller_class, $wp_object, $this->get_server(), $this->get_server()->get_namespaces());
 
 		// Exit if we are working with unknown controller.
 		if ( ! in_array( $rest_controller_class, $controllers ) ) {
