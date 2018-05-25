@@ -128,6 +128,8 @@ class REST_Inspector_Meta_Box {
 	    // grab sample rest response from server/
 	    $response = REST_Inspector()->get_rest_response();
 
+	    // var_dump($response->jsonSerialize());exit;
+
 		// Generate a title when necessary.
 		switch ( REST_Inspector::$type ) {
 			case 'term' :
@@ -194,19 +196,35 @@ class REST_Inspector_Meta_Box {
 
                 <?php
 
-				/**
-				 * Hook for adding custom output.
-				 *
-				 * @var string
-				 */
-                do_action( 'rest_inspector_meta_box_pre_json', $response );
-                ?>
+					/**
+					 * Hook for adding custom output.
+					 *
+					 * @var string
+					 */
+					do_action( 'rest_inspector_meta_box_pre_json', $response );
 
-                <div class="rest-inspector-json-args"
-                     data-rest-json="<?php echo esc_attr( json_encode( $response->data ) ); ?>"
-                     data-rest-json-depth='1'>
-                </div>
+					// Retrieve the response object.
+					$data = $response->jsonSerialize();
 
+					/**
+					 * Ensure that `_link` attributes are included in the response. They are handled by the `WP_REST_Controller`
+					 * and are not included for internal requests.
+					 *
+					 * @link https://github.com/WordPress/WordPress/blob/2f792d442bf771a3aade170cc9cae459f024c57b/wp-includes/rest-api/endpoints/class-wp-rest-controller.php#L200-L227
+					 */
+					if ( empty( $data['_links'] ) ) {
+						$links = \WP_REST_Server::get_compact_response_links( $response );
+
+						if ( ! empty( $links ) ) {
+							$data['_links'] = $links;
+						}
+					}
+					?>
+
+ 					<div class="rest-inspector-json-args"
+						data-rest-json="<?php echo esc_attr( json_encode( $data ) ); ?>"
+						data-rest-json-depth='1'>
+					</div>
 			<?php endif; ?>
 		</div><!--#rest-inspector-meta-box-->
 		<?php
