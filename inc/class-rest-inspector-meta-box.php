@@ -128,8 +128,6 @@ class REST_Inspector_Meta_Box {
 	    // grab sample rest response from server/
 	    $response = REST_Inspector()->get_rest_response();
 
-	    // var_dump($response->jsonSerialize());exit;
-
 		// Generate a title when necessary.
 		switch ( REST_Inspector::$type ) {
 			case 'term' :
