@@ -9,7 +9,10 @@
  * @package    Rest_Inspector
  * @subpackage Rest_Inspector/inc
  */
-class REST_Inspector_Meta_Box {
+
+namespace REST_Inspector;
+
+class Meta_Box {
     use Singleton;
 
 	/**
@@ -45,13 +48,13 @@ class REST_Inspector_Meta_Box {
 	 * Register Meta box for Display
 	 */
 	public function register_meta_box() {
-		switch ( REST_Inspector::$type ) {
+		switch ( \REST_Inspector::$type ) {
 			case 'comment' :
 				add_meta_box(
 					'rest-inspector-metabox',
 					__( 'REST Inspector', 'rest-inspector' ),
 					array( self::$instance, 'render_comment_meta_box' ),
-					REST_Inspector::$type,
+					\REST_Inspector::$type,
 					'normal'
 				);
 				break;
@@ -61,7 +64,7 @@ class REST_Inspector_Meta_Box {
 					'rest-inspector-metabox',
 					__( 'REST Inspector', 'rest-inspector' ),
 					array( self::$instance, 'render_post_meta_box' ),
-					REST_Inspector::$type
+					\REST_Inspector::$type
 				);
 				break;
 		}
@@ -71,8 +74,8 @@ class REST_Inspector_Meta_Box {
 	 * Render Post Meta Box
 	 */
 	public function render_post_meta_box() {
-		REST_Inspector::$object_id = get_the_ID();
-		REST_Inspector::$route_uri = REST_Inspector()->get_the_route();
+		\REST_Inspector::$object_id = get_the_ID();
+		\REST_Inspector::$route_uri = REST_Inspector()->get_the_route();
 
 		$this->render();
 	}
@@ -81,8 +84,8 @@ class REST_Inspector_Meta_Box {
 	 * Render Comment Meta Box
 	 */
 	public function render_comment_meta_box() {
-		REST_Inspector::$object_id = get_comment_ID();
-		REST_Inspector::$route_uri = REST_Inspector()->get_the_route();
+		\REST_Inspector::$object_id = get_comment_ID();
+		\REST_Inspector::$route_uri = REST_Inspector()->get_the_route();
 
 		$this->render();
 	}
@@ -96,9 +99,9 @@ class REST_Inspector_Meta_Box {
 			return;
 		}
 
-		REST_Inspector::$type      = 'term';
-		REST_Inspector::$object_id = absint( $_GET['tag_ID' ] );
-		REST_Inspector::$route_uri = REST_Inspector()->get_the_route();
+		\REST_Inspector::$type      = 'term';
+		\REST_Inspector::$object_id = absint( $_GET['tag_ID' ] );
+		\REST_Inspector::$route_uri = REST_Inspector()->get_the_route();
 
 		$this->render();
 	}
@@ -108,15 +111,15 @@ class REST_Inspector_Meta_Box {
 	 */
 	public function render_user_meta_box() {
 		if ( defined('IS_PROFILE_PAGE') && IS_PROFILE_PAGE ) {
-			REST_Inspector::$object_id = get_current_user_id();
+			\REST_Inspector::$object_id = get_current_user_id();
 		} elseif ( isset( $_GET['user_id'] ) ) {
-			REST_Inspector::$object_id = absint( $_GET['user_id' ] );
+			\REST_Inspector::$object_id = absint( $_GET['user_id' ] );
 		} else {
 			return;
 		}
 
-		REST_Inspector::$type      = 'user';
-		REST_Inspector::$route_uri = REST_Inspector()->get_the_route();
+		\REST_Inspector::$type      = 'user';
+		\REST_Inspector::$route_uri = REST_Inspector()->get_the_route();
 
 		$this->render();
 	}
@@ -129,7 +132,7 @@ class REST_Inspector_Meta_Box {
 	    $response = REST_Inspector()->get_rest_response();
 
 		// Generate a title when necessary.
-		switch ( REST_Inspector::$type ) {
+		switch ( \REST_Inspector::$type ) {
 			case 'term' :
 			case 'user' :
 				$title = __( 'REST Inspector', 'rest-inspector' );
@@ -138,7 +141,7 @@ class REST_Inspector_Meta_Box {
 
 		?>
 		<div id="rest-inspector-meta-box"
-		     class="rest-inspector__sample-response <?php echo sprintf( 'rest-inspector__%1$s-response', esc_html( REST_Inspector::$type ) ); ?>"
+		     class="rest-inspector__sample-response <?php echo sprintf( 'rest-inspector__%1$s-response', esc_html( \REST_Inspector::$type ) ); ?>"
 		>
 			<?php if ( ! empty( $title ) ) : ?>
 				<h3><?php echo esc_html( $title ); ?></h3>
@@ -154,7 +157,7 @@ class REST_Inspector_Meta_Box {
 			<p><?php
 				printf(
 					__( '<strong>Route URI:</strong> <code>%1$s</code>', 'rest-inspector' ),
-					REST_Inspector::$route_uri
+					\REST_Inspector::$route_uri
 				);
 				?></p>
 
@@ -229,7 +232,7 @@ class REST_Inspector_Meta_Box {
 	}
 }
 
-function REST_Inspector_Meta_Box() {
-	return REST_Inspector_Meta_Box::instance();
+function Meta_Box() {
+	return Meta_Box::instance();
 }
-add_action( 'plugins_loaded', 'REST_Inspector_Meta_Box' );
+add_action( 'plugins_loaded',  __NAMESPACE__ . '\Meta_Box' );

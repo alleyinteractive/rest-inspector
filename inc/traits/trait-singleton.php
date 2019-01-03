@@ -7,6 +7,9 @@
  * @package    Rest_Inspector
  * @subpackage Rest_Inspector/inc/traits
  */
+
+namespace REST_Inspector;
+
 trait Singleton {
 	/**
 	 * Existing instance.

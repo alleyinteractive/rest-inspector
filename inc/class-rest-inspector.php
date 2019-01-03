@@ -15,7 +15,7 @@
  * @subpackage Rest_Inspector/inc
  */
 class REST_Inspector {
-	use Singleton;
+	use \REST_Inspector\Singleton;
 
 	/**
 	 * The unique identifier of this plugin.

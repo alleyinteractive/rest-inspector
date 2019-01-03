@@ -34,9 +34,9 @@ require REST_INSPECTOR_ROOT . '/inc/traits/trait-singleton.php';
 
 require REST_INSPECTOR_ROOT . '/inc/class-rest-inspector.php';
 
-require REST_INSPECTOR_ROOT . '/inc/class-rest-inspector-list-table.php';
+require REST_INSPECTOR_ROOT . '/inc/class-wp-list-table.php';
 
-require REST_INSPECTOR_ROOT . '/inc/class-rest-inspector-meta-box.php';
+require REST_INSPECTOR_ROOT . '/inc/class-meta-box.php';
 
 // Initialize
 function REST_Inspector() {
