@@ -12,6 +12,9 @@
 
 namespace REST_Inspector;
 
+/**
+ * Class Meta_Box
+ */
 class Meta_Box {
     use Singleton;
 

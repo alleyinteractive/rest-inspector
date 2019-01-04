@@ -26,7 +26,7 @@ trait Singleton {
 	/**
 	 * Get class instance.
 	 *
-	 * @return object
+	 * @return self
 	 */
 	public static function instance() {
 		if ( ! isset( static::$instance ) ) {

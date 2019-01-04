@@ -32,13 +32,19 @@ define( 'REST_INSPECTOR_FILE_PATH' , REST_INSPECTOR_ROOT . '/' . basename( __FIL
  */
 require REST_INSPECTOR_ROOT . '/inc/traits/trait-singleton.php';
 
+require REST_INSPECTOR_ROOT . '/inc/helpers.php';
+
 require REST_INSPECTOR_ROOT . '/inc/class-rest-inspector.php';
 
 require REST_INSPECTOR_ROOT . '/inc/class-wp-list-table.php';
 
 require REST_INSPECTOR_ROOT . '/inc/class-meta-box.php';
 
-// Initialize
+/**
+ * Helper for accessing main plugin class.
+ *
+ * @return REST_Inspector Instance of main plugin class
+ */
 function REST_Inspector() {
 	return REST_Inspector::instance();
 }

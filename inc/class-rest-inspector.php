@@ -9,10 +9,7 @@
  */
 
 /**
- * REST Inspector Singleton Class.
- *
- * @package    Rest_Inspector
- * @subpackage Rest_Inspector/inc
+ * Class REST_Inspector
  */
 class REST_Inspector {
 	use \REST_Inspector\Singleton;

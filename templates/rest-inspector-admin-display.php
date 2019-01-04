@@ -3,14 +3,10 @@
  * Main Admin View
  *
  * @link       https://Alley.co
- * @since      1.0.0
  *
  * @package    Rest_Inspector
  * @subpackage Rest_Inspector/templates
  */
-
-$server = REST_Inspector()->get_server();
-$routes = $server->get_routes();
 
 $admin_list_table = new \REST_Inspector\WP_List_Table();
 $admin_list_table->prepare_items();
@@ -22,10 +18,19 @@ $admin_list_table->prepare_items();
     </h2>
 
     <p>
-        <?php printf(
-			__( 'Found %1$s routes registered on this site.', 'rest-inspector' ),
-            count( $routes )
-        );
+        <?php
+        if ( $admin_list_table::$visible_endpoints !== $admin_list_table::$total_endpoints ) {
+	        printf(
+		        __( 'Displaying %1$d of %2$d registered endpoints.', 'rest-inspector' ),
+		        $admin_list_table::$visible_endpoints,
+		        $admin_list_table::$total_endpoints
+	        );
+        } else {
+	        printf(
+		        __( 'Found %1$d registered REST endpoints.', 'rest-inspector' ),
+		        $admin_list_table::$total_endpoints
+	        );
+        }
 		?>
     </p>
 
