@@ -90,7 +90,7 @@ class WP_List_Table extends \WP_List_Table {
 	 */
 	private function filter_by_callback( $routes ) {
 		if ( ! isset( $_GET['_wpnonce'] ) ||
-			 wp_verify_nonce( sanitize_key( $_GET['_wpnonce'] ), 'rest_inspector_filter' ) ||
+			 ! wp_verify_nonce( sanitize_key( $_GET['_wpnonce'] ), 'rest_inspector_filter' ) ||
 			 empty( $_GET['callback'] ) ||
 			 'all' === $_GET['callback']
 		) {
