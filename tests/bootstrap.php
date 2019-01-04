@@ -37,4 +37,4 @@ tests_add_filter( 'pre_http_request', 'disable_http_requests' );
 require $_tests_dir . '/includes/bootstrap.php';
 
 // Base test class for plugin tests.
-require_once 'inc/class-rest-inspector-unittestcase.php';
+require_once 'inc/class-unittestbase.php';

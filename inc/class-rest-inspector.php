@@ -9,10 +9,7 @@
  */
 
 /**
- * REST Inspector Singleton Class.
- *
- * @package    Rest_Inspector
- * @subpackage Rest_Inspector/inc
+ * Class REST_Inspector
  */
 class REST_Inspector {
 	use \REST_Inspector\Singleton;
@@ -39,8 +36,8 @@ class REST_Inspector {
 	public $view_cap = 'manage_options';
 
 	/**
-     * Instance of the WP Rest Server.
-     *
+	 * Instance of the WP Rest Server.
+	 *
 	 * @var WP_REST_Server REST server instance.
 	 */
 	public $server;
@@ -55,54 +52,90 @@ class REST_Inspector {
 
 	/**
 	 * The ID of the object whose REST route is being rendered.
+	 *
 	 * @var int
 	 */
 	public static $object_id;
 
 	/**
 	 * URI for current rest route.
+	 *
 	 * @var int
 	 */
 	public static $route_uri;
 
 	/**
 	 * The type of rest response being displayed. Variation of `post`, `term`, 'comment', or `user`.
+	 *
 	 * @var string
 	 */
 	public static $type;
 
 	/**
+	 * Total number of REST endpoints found.
+	 *
+	 * @var int
+	 */
+	public static $total_endpoints = 0;
+
+	/**
+	 * Number of displayed REST endpoints after filtering.
+	 *
+	 * @var int
+	 */
+	public static $visible_endpoints = 0;
+
+	/**
+	 * List of available callback functions used for filtering.
+	 *
+	 * @var array
+	 */
+	public static $endpoint_callbacks = [];
+
+	/**
+	 * Array of HTTP methods provided by REST server.
+	 *
+	 * @var array
+	 */
+	public static $server_methods = [];
+
+	/**
 	 * Replacement constructor for hooking actions
 	 */
-	private static function setup() {
+	public function setup() {
 		if ( ! is_admin() ) {
 			return;
 		}
 
 		// Setup version.
-		self::$instance->version = defined( 'REST_INSPECTOR_VERSION' ) ? REST_INSPECTOR_VERSION : '1.0.0';
+		$this->version = defined( 'REST_INSPECTOR_VERSION' ) ? REST_INSPECTOR_VERSION : '1.0.0';
 
-		add_action( 'current_screen', array( self::$instance, 'set_type' )  );
+		add_action( 'current_screen', [ $this, 'set_type' ] );
 
-		add_action( 'rest_api_init', array( self::$instance, 'get_server' ) );
+		add_action( 'rest_api_init', [ $this, 'get_server' ] );
 
 		// Setup i18n.
-		add_action( 'init', array( self::$instance, 'set_locale' )  );
+		add_action( 'init', [ $this, 'set_locale' ] );
 
 		// Load admin scripts & styles.
-		add_action( 'admin_enqueue_scripts', array( self::$instance, 'load_admin_dependencies' ) );
+		add_action( 'admin_enqueue_scripts', [ $this, 'load_admin_dependencies' ] );
 
 		// Add our sub-menu page to wp admin.
-		add_action( 'admin_menu', function() {
-			add_submenu_page(
-				self::$instance->parent_slug,
-				__( 'REST API Inspector', self::$instance->name ),
-				__( 'REST Inspector', self::$instance->name ),
-				self::$instance->view_cap,
-				self::$instance->name,
-				array( self::$instance, 'render_admin_page' )
-			);
-		} );
+		add_action( 'admin_menu', [ $this, 'register_admin_page' ] );
+	}
+
+	/**
+	 * Add Plugin Submenu page to WordPress.
+	 */
+	public function register_admin_page() {
+		add_submenu_page(
+			$this->parent_slug,
+			__( 'REST API Inspector', 'rest-inspector' ),
+			__( 'REST Inspector', 'rest-inspector' ),
+			$this->view_cap,
+			$this->name,
+			array( $this, 'render_admin_page' )
+		);
 	}
 
 	/**
@@ -118,7 +151,7 @@ class REST_Inspector {
 			true
 		);
 
-		// Load Plugin JS
+		// Load Plugin JS.
 		wp_enqueue_script(
 			$this->name . '-js',
 			REST_INSPECTOR_URL . 'assets/js/rest-inspector-admin.js',
@@ -127,7 +160,7 @@ class REST_Inspector {
 			true
 		);
 
-		// Load Plugin Styles
+		// Load Plugin Styles.
 		wp_enqueue_style(
 			$this->name . '-css',
 			REST_INSPECTOR_URL . 'assets/css/rest-inspector-admin.css',
@@ -156,11 +189,11 @@ class REST_Inspector {
 	 * @uses get_current_screen()
 	 */
 	public function set_type() {
-		REST_Inspector::$type = get_post_type();
+		self::$type = get_post_type();
 
 		// Use current screen ID as fallback if post type is unavailable.
-		if ( empty( $post_type ) ) {
-			REST_Inspector::$type = get_current_screen()->id;
+		if ( empty( self::$type ) ) {
+			self::$type = get_current_screen()->id;
 		}
 	}
 
@@ -195,8 +228,8 @@ class REST_Inspector {
 	 */
 	public function get_rest_response() {
 		// Create REST request using static class values.
-		$request = new WP_REST_Request( 'GET', REST_Inspector::$route_uri );
-		$server = REST_Inspector()->get_server();
+		$request  = new WP_REST_Request( 'GET', self::$route_uri );
+		$server   = rest_inspector()->get_server();
 		$response = $server->dispatch( $request );
 
 		return $response;
@@ -205,32 +238,31 @@ class REST_Inspector {
 	/**
 	 * Determine REST route URI key from current context.
 	 *
-	 * @return string|void
+	 * @return string|null
 	 */
 	public function get_the_route() {
 		// Determine REST API base for current post.
-		switch ( REST_Inspector::$type ) {
-			case 'user' :
-				$object_id = REST_Inspector::$object_id;
-				$wp_object = get_user_by('id', $object_id );
+		switch ( self::$type ) {
+			case 'user':
+				$object_id = self::$object_id;
+				$wp_object = get_user_by( 'id', $object_id );
 				$rest_base = 'users';
 				break;
-			case 'comment' :
-				$object_id = REST_Inspector::$object_id;
+			case 'comment':
+				$object_id = self::$object_id;
 				$wp_object = get_comment( $object_id );
 				$rest_base = 'comments';
 				break;
-			case 'term' :
-				$object_id = REST_Inspector::$object_id;
-				$wp_object = get_taxonomy( wp_unslash( sanitize_text_field( $_GET['taxonomy' ] ) ) );
+			case 'term':
+				$object_id = self::$object_id;
+				$wp_object = isset( $_GET['taxonomy'] ) ? get_taxonomy( wp_unslash( sanitize_text_field( $_GET['taxonomy'] ) ) ) : null; // phpcs:ignore WordPress.Security.NonceVerification.NoNonceVerification
 				$rest_base = ! empty( $wp_object->rest_base ) ? $wp_object->rest_base : $wp_object->name;
 				break;
 			default:
-				$object_id = REST_Inspector::$object_id;
-				$wp_object = get_post_type_object( REST_Inspector::$type );
+				$object_id = self::$object_id;
+				$wp_object = get_post_type_object( self::$type );
 				$rest_base = ! empty( $wp_object->rest_base ) ? $wp_object->rest_base : $wp_object->name;
 		}
-
 
 		/**
 		 * Filter default REST controller class.
@@ -247,22 +279,26 @@ class REST_Inspector {
 		 *
 		 * @var array $controllers
 		 */
-		$controllers = apply_filters( 'rest_inspector_registered_rest_controllers', [
-			'WP_REST_Controller',
-			'WP_REST_Posts_Controller',
-			'WP_REST_Terms_Controller',
-			'WP_REST_Users_Controller',
-			'WP_REST_Comments_Controller',
-			'WP_REST_Revisions_Controller',
-			'WP_REST_Settings_Controller',
-			'WP_REST_Taxonomies_Controller',
-			'WP_REST_Attachments_Controller',
-			'WP_REST_Post_Types_Controller',
-		], $wp_object );
+		$controllers = apply_filters(
+			'rest_inspector_registered_rest_controllers',
+			[
+				'WP_REST_Controller',
+				'WP_REST_Posts_Controller',
+				'WP_REST_Terms_Controller',
+				'WP_REST_Users_Controller',
+				'WP_REST_Comments_Controller',
+				'WP_REST_Revisions_Controller',
+				'WP_REST_Settings_Controller',
+				'WP_REST_Taxonomies_Controller',
+				'WP_REST_Attachments_Controller',
+				'WP_REST_Post_Types_Controller',
+			],
+			$wp_object
+		);
 
 		// Exit if we are working with unknown controller.
-		if ( ! in_array( $rest_controller_class, $controllers ) ) {
-			return;
+		if ( ! in_array( $rest_controller_class, $controllers, true ) ) {
+			return null;
 		}
 
 		/**
@@ -272,18 +308,18 @@ class REST_Inspector {
 		 */
 		$namespace = apply_filters( 'rest_inspector_default_namespace', 'wp/v2' );
 
-		// Build and return route
-		return  '/' . $namespace . '/' . $rest_base . '/' . $object_id;
+		// Build and return route.
+		return '/' . $namespace . '/' . $rest_base . '/' . $object_id;
 	}
 
 	/**
 	 * Display Admin Page.
 	 */
 	public function render_admin_page() {
-		if ( ! current_user_can( $this->view_cap ) )  {
-			wp_die( __( 'You do not have sufficient permissions to access this page.', $this->name ) );
+		if ( ! current_user_can( $this->view_cap ) ) {
+			wp_die( esc_html__( 'You do not have sufficient permissions to access this page.', 'rest-inspector' ) );
 		}
 
-		include( REST_INSPECTOR_ROOT . '/templates/rest-inspector-admin-display.php' );
+		include REST_INSPECTOR_ROOT . '/templates/rest-inspector-admin-display.php'; // phpcs:ignore WordPressVIPMinimum.Files.IncludingFile.UsingCustomConstant
 	}
 }

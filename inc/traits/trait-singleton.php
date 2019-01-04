@@ -17,28 +17,43 @@ trait Singleton {
 	 * @var array
 	 */
 	protected static $instance;
+
+	/**
+	 * Prevents cloning for singletons.
+	 */
 	public function __clone() {
 		wp_die( "Please don't __clone" );
 	}
+
+	/**
+	 * Prevents wakeup for singletons.
+	 */
 	public function __wakeup() {
 		wp_die( "Please don't __wakeup" );
 	}
+
 	/**
 	 * Get class instance.
 	 *
-	 * @return object
+	 * @return self
 	 */
-	public static function instance() {
-		if ( ! isset( static::$instance ) ) {
-			static::$instance = new static();
-			static::$instance->setup();
-		}
-		return static::$instance;
+	final public static function instance() {
+		// phpcs:disable WordPressVIPMinimum.Variables.VariableAnalysis.StaticOutsideClass
+		return isset( static::$instance )
+			? static::$instance
+			: static::$instance = new static();
+		// phpcs:enable WordPressVIPMinimum.Variables.VariableAnalysis.StaticOutsideClass
 	}
+
+	/**
+	 * Singleton trait constructor.
+	 */
+	final private function __construct() {
+		$this->setup();
+	}
+
 	/**
 	 * Setup the singleton.
 	 */
-	public function setup() {
-		// Silence
-	}
+	protected function setup() {}
 }

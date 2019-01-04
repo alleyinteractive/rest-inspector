@@ -6,7 +6,7 @@
 /**
  * Class Tests_Get_Route
  */
-class Tests_Get_Route extends REST_Inspector_UnitTestCase {
+class Tests_Get_Route extends REST_Inspector\UnitTestBase {
 	public function setUp() {
 		parent::setUp();
 	}

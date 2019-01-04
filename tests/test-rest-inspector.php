@@ -1,6 +1,6 @@
 <?php
 
-class Tests_REST_Inspector extends REST_Inspector_UnitTestCase {
+class Tests_REST_Inspector extends REST_Inspector\UnitTestBase {
 	public function setUp() {
 		parent::setUp();
 	}
@@ -11,7 +11,7 @@ class Tests_REST_Inspector extends REST_Inspector_UnitTestCase {
 
 	public function test_plugin_instance() {
 		$this->assertClassHasStaticAttribute( 'instance', 'REST_Inspector' );
-		$this->assertClassHasStaticAttribute( 'instance', 'REST_Inspector_Meta_Box' );
+		$this->assertClassHasStaticAttribute( 'instance', '\REST_Inspector\Meta_Box' );
 	}
 
 	public function test_constants() {
@@ -19,14 +19,9 @@ class Tests_REST_Inspector extends REST_Inspector_UnitTestCase {
 		$path = str_replace( 'tests/', '', plugin_dir_url( __FILE__ ) );
 		$this->assertSame( REST_INSPECTOR_URL, $path );
 
-		// Plugin Folder Path
+		// Plugin Root Path
 		$path = str_replace( 'tests/', '', plugin_dir_path( __FILE__ ) );
-		$path = substr( $path, 0, - 1 );
 		$this->assertSame( REST_INSPECTOR_ROOT, $path );
-
-		// Plugin Root File
-		$path = str_replace( 'tests/', '', plugin_dir_path( __FILE__ ) );
-		$this->assertSame( REST_INSPECTOR_FILE_PATH, $path . 'rest-inspector.php' );
 
 		// Plugin Version
 		$this->assertNotEmpty( REST_INSPECTOR_VERSION );
