@@ -12,7 +12,7 @@
 $server = REST_Inspector()->get_server();
 $routes = $server->get_routes();
 
-$admin_list_table = new REST_Inspector_List_Table();
+$admin_list_table = new \REST_Inspector\WP_List_Table();
 $admin_list_table->prepare_items();
 ?>
 
