@@ -69,27 +69,23 @@
             Verify that the text_domain is set to the desired text-domain.
             Multiple valid text domains can be provided as a comma-delimited list.
              -->
-            <property name="text_domain" type="array" value="wp-starter-theme" />
+            <property name="text_domain" type="array" value="rest-inspector" />
         </properties>
     </rule>
 
     <rule ref="WordPress.Files.FileName">
         <properties>
-            <!--
-            Allow for theme-specific exceptions to the file name rules based
-            on the theme hierarchy.
-             -->
-            <property name="is_theme" value="true" />
+            <property name="is_plugin" value="true" />
         </properties>
     </rule>
 
     <rule ref="WordPress.NamingConventions.PrefixAllGlobals">
         <properties>
-            <property name="prefixes" type="array" value="wp_starter_theme,ai,_ai" />
+            <property name="prefixes" type="array" value="rest_inspector" />
         </properties>
 
         <!-- In practice, partials should be loaded outside of the global namespace with get_template_part(). -->
-        <exclude-pattern>themes(/vip)?/[^/]+/template-parts/</exclude-pattern>
+        <exclude-pattern>templates/</exclude-pattern>
         <exclude-pattern>vendor/</exclude-pattern>
     </rule>
 
@@ -105,6 +101,28 @@
                 <element key="wp_cache_add" value="wp_cache_set"/>
             </property> -->
         </properties>
+    </rule>
+
+    <rule ref="WordPress.WhiteSpace.ControlStructureSpacing">
+        <properties>
+            <property name="blank_line_check" value="true"/>
+        </properties>
+    </rule>
+
+    <rule ref="WordPress.WhiteSpace.PrecisionAlignment.Found">
+        <severity>0</severity>
+    </rule>
+
+    <rule ref="PEAR.Functions.FunctionCallSignature.CloseBracketLine">
+        <severity>0</severity>
+    </rule>
+
+    <rule ref="PEAR.Functions.FunctionCallSignature.ContentAfterOpenBracket">
+        <severity>0</severity>
+    </rule>
+
+    <rule ref="PEAR.Functions.FunctionCallSignature.MultipleArguments">
+        <severity>0</severity>
     </rule>
 
 </ruleset>

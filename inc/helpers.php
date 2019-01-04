@@ -23,10 +23,8 @@ function get_template_part( $slug, $name = null, $args = [] ) {
 	$path = REST_INSPECTOR_ROOT . '/' . $slug;
 
 	if ( ! empty( $name ) ) {
-		$path= "{$path}-{$name}";
+		$path = "{$path}-{$name}";
 	}
 
-	extract( $args, EXTR_PREFIX_ALL,  'template_var' );
-
-	include "{$path}.php";
+	include "$path.php";  // phpcs:ignore WordPressVIPMinimum.Files.IncludingFile
 }

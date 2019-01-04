@@ -6,7 +6,7 @@
 /**
  * Class Tests_Meta_Box
  */
-class Tests_Meta_Box extends REST_Inspector_UnitTestCase {
+class Tests_Meta_Box extends REST_Inspector\UnitTestBase {
 	public function setUp() {
 		parent::setUp();
 	}
@@ -21,7 +21,7 @@ class Tests_Meta_Box extends REST_Inspector_UnitTestCase {
 		REST_Inspector::$route_uri = $this->plugin_instance->get_the_route();
 		
 		ob_start();
-		Rest_Inspector_Meta_Box()->render();
+		\REST_Inspector\Meta_Box()->render();
 		$output = ob_get_clean();
 
 		$this->assertNotEmpty( $output );

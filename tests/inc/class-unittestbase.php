@@ -3,10 +3,12 @@
  * Base Test Class for REST Inspector Plugin.
  */
 
+namespace REST_Inspector;
+
 /**
  * Class REST_Inspector_UnitTest
  */
-class REST_Inspector_UnitTestCase extends WP_UnitTestCase {
+class UnitTestBase extends \WP_UnitTestCase {
 	// Instance of REST Inspector singleton.
 	protected $plugin_instance;
 
@@ -17,7 +19,7 @@ class REST_Inspector_UnitTestCase extends WP_UnitTestCase {
 		$user_id = $this->factory->user->create( array( 'role' => 'administrator' ) );
 		$user = wp_set_current_user( $user_id );
 
-		$this->plugin_instance = REST_Inspector();
+		$this->plugin_instance = rest_inspector();
 	}
 
 	public function tearDown() {
