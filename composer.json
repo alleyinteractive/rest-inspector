@@ -1,0 +1,11 @@
+{
+  "name": "alleyinteractive/rest-inspector",
+  "description": "Displays the REST response and route information on posts, terms, users and comment pages.",
+  "type": "wordpress-plugin",
+  "keywords": ["wordpress", "plugin", "REST", "headless", "api"],
+  "homepage": "https://github.com/alleyinteractive/wp-seo/",
+  "license" : "GPL-3.0+",
+  "require": {
+    "composer/installers": "~1.0"
+  }
+}
